@@ -2,13 +2,11 @@
  * @name ServerThemes
  * @author Baguettery
  * @description Allows servers to set custom themes for discord!
- * @version 1.0.1
+ * @version 1.0.2
  * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js
  */
 
 module.exports = class ServerThemes {
-    load() {} // Optional function. Called when the plugin is loaded in to memory
-
     start() {
       // register channel listener
       this.bdfdb = BDFDB_Global.PluginUtils.buildPlugin()[1]

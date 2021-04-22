@@ -20,6 +20,7 @@ module.exports = class ServerThemes {
     }
 
     getAllChannels() {
+      /* TODO: This isn't efficient in the slightest. Cache? */
       let chnls = this.bdfdb.LibraryModules.ChannelStore.getMutableGuildChannels()
       // holy shit this is the hackiest thing ever
       return Object.keys(chnls).filter((x)=>{return chnls[x].guild_id == ZeresPluginLibrary.DiscordAPI.currentGuild.id}).map((x)=>{return chnls[x]})

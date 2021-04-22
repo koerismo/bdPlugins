@@ -2,7 +2,7 @@
  * @name ServerThemes
  * @author Baguettery
  * @description Allows servers to set custom themes for discord!
- * @version 1.0.2
+ * @version 1.0.3
  * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js
  */
 

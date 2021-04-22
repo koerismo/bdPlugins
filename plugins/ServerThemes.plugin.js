@@ -29,6 +29,7 @@ module.exports = class ServerThemes {
     }
     
     onEvent(disp,args,orig,self) {
+      orig(...args)
       if (args[0].type === 'CHANNEL_SELECT') {
 
         // Set theme
@@ -74,6 +75,5 @@ module.exports = class ServerThemes {
         }
 
       }
-      orig(...args)
     }
 }

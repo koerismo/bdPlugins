@@ -2,17 +2,22 @@
  * @name ServerThemes
  * @author Baguettery
  * @description Allows servers to set custom themes for discord!
- * @version 1.0.3
- * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js
  */
 
 module.exports = class ServerThemes {
+    getVersion() {return '1.0.3'}
+  
     start() {
+      // check for updates
+      ZeresPluginLibrary.PluginUpdater.checkForUpdate('ServerThemes', this.getVersion(), 'https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js')
+      
       // register channel listener
       this.bdfdb = BDFDB_Global.PluginUtils.buildPlugin()[1]
       ZeresPluginLibrary.Patcher.instead('ServerThemes', ZeresPluginLibrary.WebpackModules.find(m => m.dispatch), "dispatch", (obj,args,origf) => {this.onEvent(obj,args,origf,this)})
     }
     stop() {
+      // clear css
+      BdApi.clearCSS("ServerThemes")
       // unregister message listener
       ZeresPluginLibrary.Patcher.unpatchAll('ServerThemes')
     }

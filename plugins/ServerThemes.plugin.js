@@ -5,12 +5,12 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.3'}
-  
+    getVersion() {return '1.0.4'}
+
     start() {
       // check for updates
       ZeresPluginLibrary.PluginUpdater.checkForUpdate('ServerThemes', this.getVersion(), 'https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js')
-      
+
       // register channel listener
       this.bdfdb = BDFDB_Global.PluginUtils.buildPlugin()[1]
       ZeresPluginLibrary.Patcher.instead('ServerThemes', ZeresPluginLibrary.WebpackModules.find(m => m.dispatch), "dispatch", (obj,args,origf) => {this.onEvent(obj,args,origf,this)})
@@ -30,9 +30,10 @@ module.exports = class ServerThemes {
     }
 
     cleanCSSValue(x) {
-        return x.split('').filter((y)=>{return '#1234567890abcdefghijklmnopqrstuvwyz'.includes(y.toLowerCase())}).join('')
+        return x.split('').filter((y)=>{return '#1234567890abcdefghijklmnopqrstuvwyz(:/.)'.includes(y.toLowerCase())}).join('')
+        // TODO: Does allowing ():/. introduce any possible exploits?
     }
-    
+
     onEvent(disp,args,orig,self) {
       orig(...args)
       if (args[0].type === 'CHANNEL_SELECT') {
@@ -55,7 +56,8 @@ module.exports = class ServerThemes {
           '--background-floating',
           '--channeltextarea-background',
           '--scrollbar-auto-track',
-          '--scrollbar-auto-thumb'
+          '--scrollbar-auto-thumb',
+          '--header-image'
         ]
 
         let themeChannels = this.getAllChannels().filter((x)=>{return (x.type == 0 && x.name == 'info-bdtheme')})
@@ -70,8 +72,19 @@ module.exports = class ServerThemes {
             Object.keys(json_unfiltered).forEach((x)=>{
               if (acceptableKeys.includes(x)) {json[x] = this.cleanCSSValue(json_unfiltered[x])}
             })
+
             // Add css
-            let css = '\n:root {\n'+Object.keys(json).map((x)=>{return ` ${x}: ${json[x]};`}).join('\n')+'\n}'
+            let css = `
+            :root {
+            `+Object.keys(json).map((x)=>{return ` ${x}: ${json[x]};`}).join('\n')+`
+            }
+            .da-chat section.da-title.da-container {
+              background-image: var(--header-image);
+              background-size: cover;
+              background-position: left center;
+            }`
+
+
             BdApi.injectCSS("ServerThemes",css)
           }
           catch(e) {

@@ -2,7 +2,7 @@
  * @name ServerThemes
  * @author Baguettery
  * @description Allows servers to set custom themes for discord!
- * @version 1.0.0
+ * @version 1.0.1
  * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js
  */
 
@@ -25,6 +25,10 @@ module.exports = class ServerThemes {
       return Object.keys(chnls).filter((x)=>{return chnls[x].guild_id == ZeresPluginLibrary.DiscordAPI.currentGuild.id}).map((x)=>{return chnls[x]})
     }
 
+    cleanCSSValue(x) {
+        return x.split('').filter((y)=>{return '#1234567890abcdefghijklmnopqrstuvwyz'.includes(y.toLowerCase())}).join('')
+    }
+    
     onEvent(disp,args,orig,self) {
       if (args[0].type === 'CHANNEL_SELECT') {
 
@@ -59,7 +63,7 @@ module.exports = class ServerThemes {
             // Filter json
             let json = {}
             Object.keys(json_unfiltered).forEach((x)=>{
-              if (acceptableKeys.includes(x)) {json[x] = json_unfiltered[x]}
+              if (acceptableKeys.includes(x)) {json[x] = this.cleanCSSValue(json_unfiltered[x])}
             })
             // Add css
             let css = '\n:root {\n'+Object.keys(json).map((x)=>{return ` ${x}: ${json[x]};`}).join('\n')+'\n}'

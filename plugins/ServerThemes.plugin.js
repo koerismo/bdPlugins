@@ -3,7 +3,7 @@
  * @author Baguettery
  * @description Allows servers to set custom themes for discord!
  * @version 1.0.0
- * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/master/plugins/ServerThemes.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/koerismo/bdPlugins/main/plugins/ServerThemes.plugin.js
  */
 
 module.exports = class ServerThemes {

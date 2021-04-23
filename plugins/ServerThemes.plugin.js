@@ -5,7 +5,7 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.5'}
+    getVersion() {return '1.0.6'}
 
     start() {
       // check for updates
@@ -46,9 +46,23 @@ module.exports = class ServerThemes {
       return Object.keys(chnls).filter((x)=>{return chnls[x].guild_id == ZeresPluginLibrary.DiscordAPI.currentGuild.id}).map((x)=>{return chnls[x]})
     }
 
+    checkURL(url) {
+      let acceptableDomains = [
+        'raw.githubusercontent.com',//GitHub
+        'i.imgur.com',              //Imgur
+        'dl.dropboxusercontent.com',//Dropbox
+        'media.discordapp.net',     //Discord
+        'cdn.discordapp.com'        //Discord
+      ]
+      var parsed
+      try {parsed = new URL(url)}
+      catch {console.warn('ServerThemes: Unable to resolve header image URL!');return false}
+      return (acceptableDomains.includes(parsed.hostname))
+    }
+
     cleanCSSValue(x) {
-        return x.split('').filter((y)=>{return '#1234567890abcdefghijklmnopqrstuvwyz(:/.)'.includes(y.toLowerCase())}).join('')
-        // TODO: Does allowing ():/. introduce any possible exploits?
+        return x.split('').filter((y)=>{return '#1234567890abcdefghijklmnopqrstuvwyz:/.'.includes(y.toLowerCase())}).join('')
+        // TODO: Does allowing :/. introduce any possible exploits?
     }
 
     onEvent(disp,args,orig,self) {
@@ -96,6 +110,11 @@ module.exports = class ServerThemes {
             Object.keys(json_unfiltered).forEach((x)=>{
               if (acceptableKeys.includes(x)) {json[x] = this.cleanCSSValue(json_unfiltered[x])}
             })
+
+            if (json['--topbar-background-image'] && !this.checkURL(json['--topbar-background-image'])) {
+              json['--topbar-background-image'] = ''
+            }
+            else {json['--topbar-background-image'] = `url(${json['--topbar-background-image']})`}
 
             // Add theme css
             let css = `

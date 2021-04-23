@@ -5,7 +5,7 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.4'}
+    getVersion() {return '1.0.5'}
 
     start() {
       // check for updates
@@ -14,10 +14,27 @@ module.exports = class ServerThemes {
       // register channel listener
       this.bdfdb = BDFDB_Global.PluginUtils.buildPlugin()[1]
       ZeresPluginLibrary.Patcher.instead('ServerThemes', ZeresPluginLibrary.WebpackModules.find(m => m.dispatch), "dispatch", (obj,args,origf) => {this.onEvent(obj,args,origf,this)})
+
+      // inject initial css
+      BdApi.injectCSS("ServerThemes",`
+      .da-chat section.da-title.da-container {
+        background-color: var(--topbar-background-color);
+        background-image: var(--topbar-background-image);
+        background-size: cover;
+        background-position: left center;
+      }
+      .da-chat section.da-title.da-container h3 {color: var(--topbar-primary);}
+      .da-chat section.da-title.da-container .da-topic {color: var(--topbar-secondary);}
+      .da-chat section.da-title.da-container .da-children:after {background: linear-gradient(90deg,rgba(54,57,63,0) 0,var(--topbar-background-color));}
+      .da-chat section.da-title.da-container .da-iconWrapper .da-icon {color: var(--topbar-secondary);}
+      .da-chat section.da-title.da-container .da-iconWrapper.da-selected .da-icon {color: var(--topbar-primary);}
+      `)
+      // End
     }
     stop() {
       // clear css
       BdApi.clearCSS("ServerThemes")
+      BdApi.clearCSS("ServerThemes_theme")
       // unregister message listener
       ZeresPluginLibrary.Patcher.unpatchAll('ServerThemes')
     }
@@ -44,10 +61,12 @@ module.exports = class ServerThemes {
           '--text-muted',
           '--text-link',
           '--channels-default',
+
           '--interactive-normal',
           '--interactive-hover',
           '--interactive-active',
           '--interactive-muted',
+
           '--background-primary',
           '--background-secondary',
           '--background-secondary-alt',
@@ -55,15 +74,20 @@ module.exports = class ServerThemes {
           '--background-accent',
           '--background-floating',
           '--channeltextarea-background',
+
           '--scrollbar-auto-track',
           '--scrollbar-auto-thumb',
-          '--header-image'
+          /* Custom rules */
+          '--topbar-background-color',
+          '--topbar-background-image',
+          '--topbar-primary',
+          '--topbar-secondary'
         ]
 
         let themeChannels = this.getAllChannels().filter((x)=>{return (x.type == 0 && x.name == 'info-bdtheme')})
 
 
-        BdApi.clearCSS("ServerThemes")
+        BdApi.clearCSS("ServerThemes_theme")
         if (themeChannels.length > 0) {
           try {
             let json_unfiltered = JSON.parse(themeChannels[0].topic)
@@ -73,19 +97,13 @@ module.exports = class ServerThemes {
               if (acceptableKeys.includes(x)) {json[x] = this.cleanCSSValue(json_unfiltered[x])}
             })
 
-            // Add css
+            // Add theme css
             let css = `
             :root {
             `+Object.keys(json).map((x)=>{return ` ${x}: ${json[x]};`}).join('\n')+`
-            }
-            .da-chat section.da-title.da-container {
-              background-image: var(--header-image);
-              background-size: cover;
-              background-position: left center;
             }`
 
-
-            BdApi.injectCSS("ServerThemes",css)
+            BdApi.injectCSS("ServerThemes_theme",css)
           }
           catch(e) {
             console.error('An error occured while parsing theme!',e)

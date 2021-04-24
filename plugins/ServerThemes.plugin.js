@@ -5,7 +5,7 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.6'}
+    getVersion() {return '1.0.7'}
 
     start() {
       // check for updates
@@ -98,7 +98,9 @@ module.exports = class ServerThemes {
           '--topbar-secondary'
         ]
 
-        let themeChannels = this.getAllChannels().filter((x)=>{return (x.type == 0 && x.name == 'info-bdtheme')})
+        let themeChannels = []
+        if (ZeresPluginLibrary.DiscordAPI.currentGuild != null)
+          themeChannels = this.getAllChannels().filter((x)=>{return (x.type == 0 && x.name == 'info-bdtheme')})
 
 
         BdApi.clearCSS("ServerThemes_theme")

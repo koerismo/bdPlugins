@@ -17,7 +17,7 @@ module.exports = class ServerThemes {
 
       // inject initial css
       BdApi.injectCSS("ServerThemes",`
-      .da-chat section.da-title.da-container {
+      .chat-3bRxxu section.title-3qD0b- {
         background-color: var(--topbar-background-color);
         background-image: var(--topbar-background-image);
         background-size: cover;

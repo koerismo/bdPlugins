@@ -5,7 +5,7 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.7'}
+    getVersion() {return '1.0.8'}
 
     start() {
       // check for updates
@@ -23,11 +23,11 @@ module.exports = class ServerThemes {
         background-size: cover;
         background-position: left center;
       }
-      .da-chat section.da-title.da-container h3 {color: var(--topbar-primary);}
-      .da-chat section.da-title.da-container .da-topic {color: var(--topbar-secondary);}
-      .da-chat section.da-title.da-container .da-children:after {background: linear-gradient(90deg,rgba(54,57,63,0) 0,var(--topbar-background-color));}
-      .da-chat section.da-title.da-container .da-iconWrapper .da-icon {color: var(--topbar-secondary);}
-      .da-chat section.da-title.da-container .da-iconWrapper.da-selected .da-icon {color: var(--topbar-primary);}
+      .chat-3bRxxu section.title-3qD0b- h3 {color: var(--topbar-primary);}
+      .chat-3bRxxu section.title-3qD0b- .topic-TCb_qw {color: var(--topbar-secondary);}
+      .chat-3bRxxu section.title-3qD0b- .children-19S4PO:after {background: linear-gradient(90deg,rgba(54,57,63,0) 0,var(--topbar-background-color));}
+      .chat-3bRxxu section.title-3qD0b- .iconWrapper-2OrFZ1 .da-icon {color: var(--topbar-secondary);}
+      .chat-3bRxxu section.title-3qD0b- .iconWrapper-2OrFZ1.selected-1GqIat .icon-22AiRD {color: var(--topbar-primary);}
       `)
       // End
     }

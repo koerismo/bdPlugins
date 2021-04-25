@@ -5,7 +5,7 @@
  */
 
 module.exports = class ServerThemes {
-    getVersion() {return '1.0.8'}
+    getVersion() {return '1.0.9'}
 
     start() {
       // check for updates
